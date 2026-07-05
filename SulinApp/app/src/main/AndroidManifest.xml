@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Conexión a internet: imprescindible para cargar la web -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Cámara: usada por el Visor QR 360 para escanear activos -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Vibración: feedback háptico al escanear un QR con éxito (opcional) -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Notificaciones push (Android 13+ pide este permiso en tiempo de
+         ejecución; MainActivity lo solicita). Sin esto, FCM igual recibe
+         los mensajes pero el sistema no puede mostrar la notificación. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Descargas: permite guardar reportes/exportables (PDF, Excel, etc.) -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
+    <!-- La cámara es opcional: si un dispositivo no la tiene, igual puede
+         instalar la app (el resto de los módulos funcionan sin ella). -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
+    <application
+        android:name=".SulinApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:usesCleartextTraffic="false"
+        android:supportsRtl="true"
+        android:hardwareAccelerated="true"
+        android:theme="@style/Theme.Sulin"
+        tools:targetApi="35">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize|uiMode|density"
+            android:theme="@style/Theme.Sulin.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Servicio que recibe los mensajes push de Firebase Cloud Messaging
+             y los muestra como notificación (ver SulinFirebaseMessagingService.kt).
+             No hace nada hasta que se configure Firebase (ver PUSH_NOTIFICATIONS.md). -->
+        <service
+            android:name=".SulinFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Ícono y color por defecto que usa Android para notificaciones que
+             no especifican los suyos propios (recomendado por Firebase). -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/sulin_accent" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/notification_channel_id" />
+
+        <!-- FileProvider: necesario para que el selector de archivos de la
+             web pueda ofrecer "Tomar foto" al reportar fallas o subir
+             evidencias (cámara -> archivo temporal -> input file de la web) -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>
