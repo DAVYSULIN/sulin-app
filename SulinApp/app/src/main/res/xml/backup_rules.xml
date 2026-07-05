@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<full-backup-content>
-    <!-- Configuración de backup para Android < 12. Por defecto se incluye
-         todo lo que la app guarda localmente (sesión, preferencias, etc.) -->
-</full-backup-content>
