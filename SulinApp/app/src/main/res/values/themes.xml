@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        Tema fijo (no DayNight): la web tiene su propia estética oscura de
+        "Centro de Comando" que no cambia con el modo claro/oscuro del
+        teléfono, así que la app nativa mantiene siempre los mismos colores
+        para que no haya un salto visual entre el splash/status bar y la web.
+    -->
+    <style name="Theme.Sulin" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">@color/sulin_primary</item>
+        <item name="colorPrimaryDark">@color/sulin_primary_dark</item>
+        <item name="colorAccent">@color/sulin_accent</item>
+        <item name="colorControlActivated">@color/sulin_accent</item>
+        <item name="android:windowBackground">@color/sulin_background</item>
+        <item name="android:statusBarColor">@color/sulin_primary_dark</item>
+        <item name="android:navigationBarColor">@color/sulin_primary_dark</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="29">false</item>
+    </style>
+
+    <!-- Tema exclusivo para el arranque: se ve mientras Android 12+ dibuja
+         la Splash Screen del sistema y la WebView todavía está cargando. -->
+    <style name="Theme.Sulin.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/sulin_primary</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/splash_icon_background</item>
+        <item name="postSplashScreenTheme">@style/Theme.Sulin</item>
+    </style>
+
+</resources>
